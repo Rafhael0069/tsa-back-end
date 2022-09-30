@@ -1,6 +1,13 @@
 import { Router, Request, Response } from "express";
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import {
+  autheticationUser,
+  createUser,
+  deleteUser,
+  getUserData,
+  updateUserData,
+} from "../services/userAuthService";
 
 const routers = Router();
 
@@ -11,43 +18,25 @@ const prisma = new PrismaClient();
 routers.post("/", async (req: Request, res: Response) => {
   const { userName, userEmail, birthDate, encryptedPassword, imageAdrress } =
     req.body;
-  const user = await prisma.user.create({
-    data: {
-      userName,
-      userEmail,
-      birthDate,
-      encryptedPassword,
-      imageAdrress,
-    },
-  });
+  const user = await createUser(
+    userName,
+    userEmail,
+    birthDate,
+    encryptedPassword,
+    imageAdrress
+  );
   res.json(user);
 });
 
 routers.post("/login", async (req: Request, res: Response) => {
   const { userEmail, encryptedPassword } = req.body;
-  const user = await prisma.user.findUnique({
-    where: {
-      userEmail: userEmail,
-    },
-  });
-  if (user != null) {
-    if (user.encryptedPassword === encryptedPassword) {
-      res.json(user);
-    } else {
-      res.end("senha invalida");
-    }
-  } else {
-    res.end("Email nao encontrado");
-  }
+  const resposta = await autheticationUser(userEmail, encryptedPassword);
+  res.end(resposta);
 });
 
 routers.get("/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
-  const user = await prisma.user.findUnique({
-    where: {
-      id: Number(id),
-    },
-  });
+  const user = await getUserData(id);
   res.json(user);
 });
 
@@ -58,25 +47,14 @@ routers.get("/", async (req: Request, res: Response) => {
 
 routers.put("/", async (req: Request, res: Response) => {
   const { id, userName } = req.body;
-  const updadeUser = await prisma.user.update({
-    where: {
-      id: id,
-    },
-    data: {
-      userName,
-    },
-  });
-  res.json(updadeUser);
+  const resposta = await updateUserData(id, userName);
+  res.end(resposta);
 });
 
 routers.delete("/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
-  const deleteUser = await prisma.user.delete({
-    where: {
-      id: Number(id),
-    },
-  });
-  res.json(deleteUser);
+  const resposta = await deleteUser(id);
+  res.end(resposta);
 });
 
 export default routers;

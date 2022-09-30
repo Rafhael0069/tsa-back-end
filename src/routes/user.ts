@@ -1,13 +1,13 @@
 import { Router, Request, Response } from "express";
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import { autheticationUser } from "../services/authService";
 import {
-  autheticationUser,
   createUser,
   deleteUser,
   getUserData,
   updateUserData,
-} from "../services/userAuthService";
+} from "../services/userService";
 
 const routers = Router();
 
@@ -32,6 +32,10 @@ routers.post("/login", async (req: Request, res: Response) => {
   const { userEmail, encryptedPassword } = req.body;
   const resposta = await autheticationUser(userEmail, encryptedPassword);
   res.end(resposta);
+});
+
+routers.post("/logout", async (req: Request, res: Response) => {
+  res.end();
 });
 
 routers.get("/:id", async (req: Request, res: Response) => {

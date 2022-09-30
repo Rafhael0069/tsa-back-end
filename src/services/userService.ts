@@ -1,5 +1,6 @@
-import { json } from "express";
 import { PrismaClient } from "@prisma/client";
+
+const SECRET = "rafhaelgaspar";
 
 const prisma = new PrismaClient();
 
@@ -43,24 +44,6 @@ async function deleteUser(id: string) {
   return "usuario deletado com sucesso.";
 }
 
-async function autheticationUser(userEmail: string, encryptedPassword: string) {
-  const user = await prisma.user.findUnique({
-    where: {
-      userEmail: userEmail,
-    },
-  });
-  if (user != null) {
-    if (user.encryptedPassword === encryptedPassword) {
-      //console.log(user);
-      return "Usuario logado com sucesso.";
-    } else {
-      return "Senha inválida.";
-    }
-  } else {
-    return "Usuário não encontrado.";
-  }
-}
-
 async function getUserData(id: string) {
   const user = await prisma.user.findUnique({
     where: {
@@ -72,7 +55,6 @@ async function getUserData(id: string) {
 
 export {
   createUser,
-  autheticationUser,
   getUserData,
   updateUserData,
   deleteUser,

@@ -1,10 +1,10 @@
 {
     "name": "top-scenes-anime",
     "version": "1.0.0",
-    "main": "index.ts",
+    "main": "server.ts",
     "license": "MIT",
     "scripts":{
-        "devStart":"nodemon index.ts"
+        "devStart":"nodemon src/server.ts"
     },
     "dependencies": {
         "@prisma/client": "^4.4.0",

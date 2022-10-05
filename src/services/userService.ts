@@ -18,7 +18,7 @@ class UserService {
       },
     });
 
-    res.json(user);
+    return res.json(user);
   }
 
   async updateUserData(req: Request, res: Response) {
@@ -31,7 +31,7 @@ class UserService {
         userName,
       },
     });
-    res.json(user);
+    return res.json(user);
   }
 
   async deleteUser(req: Request, res: Response) {
@@ -41,7 +41,7 @@ class UserService {
         id: Number(id),
       },
     });
-    res.json(user);
+    return res.json(user);
   }
 
   async getUserByid(req: Request, res: Response) {
@@ -51,17 +51,13 @@ class UserService {
         id: Number(id),
       },
     });
-    res.json(user);
+    return res.json(user);
   }
 
   async getUsers(req: Request, res: Response) {
     const id = req.params.id;
-    const user = await prisma.user.findUnique({
-      where: {
-        id: Number(id),
-      },
-    });
-    res.json(user);
+    const user = await prisma.user.findMany();
+    return res.json(user);
   }
 }
 

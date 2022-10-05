@@ -1,10 +1,17 @@
+/* import { User } from './../repositories/base/ModelTypes';
+import UserRepository from '../repositories/UserRepository'; */
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-const prisma = new PrismaClient();
+//import dotenv from "dotenv";
+//dotenv.config();
 
-class AuthService{
+const prisma = new PrismaClient();
+const tokemSecret = process.env.SECRET!;
+//const userRepository = new UserRepository();
+
+class AuthService {
   async authentication(req: Request, res: Response) {
     const { userEmail, encryptedPassword } = req.body;
     const user = await prisma.user.findUnique({
@@ -16,15 +23,20 @@ class AuthService{
       if (user.encryptedPassword === encryptedPassword) {
         //console.log(user);
         //const token = jwt.sing(user.id, SECRET, { expireIn: 300 });
-        const token = jwt.sign({ id: user.id }, "teste", { expiresIn: "1d" });
-        return token;
+        const token = jwt.sign({ id: user.id }, tokemSecret, {
+          expiresIn: "1d",
+        });
+
+        //delete user.encryptedPassword;
+        
+        return res.json({user, token});
       } else {
-        res.end("Senha inválida.");
+        return res.end("Senha inválida.");
       }
     } else {
-      res.end("Usuário não encontrado.");
+      return res.end("Usuário não encontrado. --env: ");
     }
   }
 }
 
-export default new AuthService; 
+export default new AuthService();

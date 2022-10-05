@@ -1,31 +1,24 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-interface TokemPayload {
-  id: String;
-  iat: Number;
-  exp: Number;
-}
+class AuthMiddleware {
+  accessAuth(req: Request, res: Response, next: NextFunction) {
+    const token = req.headers["authorization"]?.split("Bearer ")[1];
 
-export default function authMiddleware(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  const { authorization } = req.headers;
-
-  if (!authorization) {
-    return res.sendStatus(401);
-  } else {
-    const tokem = authorization.replace("Bearer", "").trim();
+    if (!token) return res.sendStatus(401);
     try {
-      const data = jwt.verify(tokem, process.env.SECRET!);
-      //const { id } = data as unknown as TokemPayload;
-      //req.userId = id;
-      //console.log(id);
-      return next();
-    } catch {
+      const id = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!);
+      next();
+    } catch (error) {
       return res.sendStatus(401);
     }
   }
+
+  createAccessToken = (userId: number) => {
+    return jwt.sign({ id: userId }, process.env.ACCESS_TOKEN_SECRET!, {
+      expiresIn: `${process.env.ACCESS_TOKEN_DURATION_MINUTES}m`,
+    });
+  };
 }
+
+export default new AuthMiddleware();

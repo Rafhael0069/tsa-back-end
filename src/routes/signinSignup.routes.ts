@@ -2,7 +2,7 @@ import { Router } from "express";
 import express from "express";
 import authService from "../services/authService";
 import userService from "../services/userService";
-import authMiddleware from "../middlewares/authMiddleware";
+import authMiddleware from "../middlewares/auth";
 
 const routers = Router();
 routers.use(express.json());

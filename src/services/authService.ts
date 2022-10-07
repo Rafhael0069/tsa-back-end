@@ -1,9 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import authMiddleware from "../middlewares/authMiddleware";
+import authMiddleware from "../middlewares/auth";
+
+//import { User } from "./User";
 
 const prisma = new PrismaClient();
-const tokemSecret = process.env.ACCESS_TOKEN_SECRET!;
 
 class AuthService {
   async authentication(req: Request, res: Response) {
@@ -18,9 +19,12 @@ class AuthService {
 
         const token = authMiddleware.createAccessToken(user.id ); 
 
-        //delete user.encryptedPassword;
+        let userReturn = {
+          Nome: user.userName,
+          Email: user.userEmail
+        }
         
-        return res.json({user, token});
+        return res.json({userReturn, token});
       } else {
         return res.end("Senha inválida.");
       }

@@ -1,7 +1,6 @@
 import { Router } from "express";
 import express from "express";
 import authService from "../services/auth";
-import userService from "../services/users";
 import cors from "cors";
 const routers = Router();
 

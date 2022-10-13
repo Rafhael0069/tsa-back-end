@@ -10,12 +10,12 @@ class AuthMiddleware {
     try {
       const id = jwt.verify(token, config.JWT_SECRET);
       next();
-    } catch (erro) {
+    } catch (erro:any) {
       return res.status(401).send(erro.message);
     }
   }
 
-  createAccessToken = (userId: number) => {
+  createAccessToken = (userId: string) => {
     return jwt.sign({ id: userId }, config.JWT_SECRET, {
       expiresIn: `${config.TOKEN_DURATION}m`,
     });

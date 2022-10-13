@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import config from "../config/production"
 
 class AuthMiddleware {
   accessAuth(req: Request, res: Response, next: NextFunction) {
@@ -7,16 +8,16 @@ class AuthMiddleware {
 
     if (!token) return res.sendStatus(401);
     try {
-      const id = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!);
+      const id = jwt.verify(token, config.JWT_SECRET);
       next();
-    } catch (error) {
-      return res.sendStatus(401);
+    } catch (erro) {
+      return res.status(401).send(erro.message);
     }
   }
 
   createAccessToken = (userId: number) => {
-    return jwt.sign({ id: userId }, process.env.ACCESS_TOKEN_SECRET!, {
-      expiresIn: `${process.env.ACCESS_TOKEN_DURATION_MINUTES}m`,
+    return jwt.sign({ id: userId }, config.JWT_SECRET, {
+      expiresIn: `${config.TOKEN_DURATION}m`,
     });
   };
 }

@@ -9,7 +9,7 @@ class UserService {
     const { id, userName } = req.body;
     const user = await prisma.user.update({
       where: {
-        id: Number(id),
+        id,
       },
       data: {
         userName,
@@ -23,7 +23,7 @@ class UserService {
     const id = req.params.id;
     const user = await prisma.user.delete({
       where: {
-        id: Number(id),
+        id,
       },
     });
     return res.json(user);
@@ -33,7 +33,7 @@ class UserService {
     const id = req.params.id;
     const user = await prisma.user.findUnique({
       where: {
-        id: Number(id),
+        id,
       },
     });
 

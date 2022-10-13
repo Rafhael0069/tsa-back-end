@@ -4,23 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 class UserService {
-  async createUser(req: Request, res: Response) {
-    const { userName, userEmail, birthDate, encryptedPassword, imageAdrress } =
-      req.body;
-
-    const user = await prisma.user.create({
-      data: {
-        userName,
-        userEmail,
-        birthDate,
-        encryptedPassword,
-        imageAdrress,
-      },
-    });
-
-    return res.json(user);
-  }
-
+ 
   async updateUserData(req: Request, res: Response) {
     const { id, userName } = req.body;
     const user = await prisma.user.update({
@@ -31,7 +15,8 @@ class UserService {
         userName,
       },
     });
-    return res.json(user);
+
+    return res.status(201).json(user);
   }
 
   async deleteUser(req: Request, res: Response) {
@@ -51,13 +36,13 @@ class UserService {
         id: Number(id),
       },
     });
-    return res.json(user);
+
+    return res.status(200).json(user);
   }
 
   async getUsers(req: Request, res: Response) {
-    const id = req.params.id;
     const user = await prisma.user.findMany();
-    return res.json(user);
+    return res.status(200).json(user);
   }
 }
 

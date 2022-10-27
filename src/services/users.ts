@@ -4,15 +4,15 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 class UserService {
- 
-  async updateUserData(req: Request, res: Response) {
-    const { id, userName } = req.body;
+  async verifedUser(req: Request, res: Response) {
+    const { idUser } = req.body;
     const user = await prisma.user.update({
       where: {
-        id,
+        idUser,
       },
       data: {
-        userName,
+        verified: true,
+        level: 2,
       },
     });
 

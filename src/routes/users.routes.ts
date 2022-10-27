@@ -1,17 +1,15 @@
 import { Router } from "express";
-import express from "express";
 import userService from "../services/users";
 import authMiddleware from "../middlewares/auth";
-import cors from "cors";
 const routers = Router();
 
-routers.use(express.json());
-routers.use(cors());
+/* routers.get("/:id", authMiddleware.accessAuth, userService.getUserByid);
 
-routers.get("/:id", authMiddleware.accessAuth, userService.getUserByid);
+routers.get("/users", authMiddleware.accessAuth, userService.getUsers); */
 
-routers.get("/users", authMiddleware.accessAuth, userService.getUsers);
+routers.get("/:id", userService.getUserByid);
 
-routers.put("/", authMiddleware.accessAuth, userService.updateUserData);
+routers.get("/users", userService.getUsers);
+
 
 export default routers;
